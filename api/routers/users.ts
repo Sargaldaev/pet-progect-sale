@@ -10,13 +10,17 @@ const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
 usersRouter.post('/', async (req, res, next) => {
+
+  console.log(0);
   try {
     const user = new User({
       username: req.body.username,
       password: req.body.password,
-      phoneNumber:req.body.phoneNumber,
       displayName: req.body.displayName,
+      phoneNumber:req.body.phoneNumber,
     });
+
+    console.log(user);
 
     user.generateToken();
 

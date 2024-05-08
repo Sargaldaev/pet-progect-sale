@@ -5,7 +5,6 @@ import { randomUUID } from 'crypto';
 
 export interface UserMethods extends UserFields {
   checkPassword(password: string): Promise<boolean>;
-
   generateToken(): void;
 }
 
@@ -53,8 +52,8 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     required: true,
     type: String,
   },
-  phone: {
-    // required: true, //ToDo надо решить эту часть
+  phoneNumber: {
+    // required: true, //ToDo надо решить эту часть,серевер требует поле phoneNumber при логине
     type: String,
   },
 });

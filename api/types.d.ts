@@ -1,7 +1,7 @@
 export interface UserFields {
   username: string;
   displayName: string;
-  phone: string;
+  phoneNumber: string;
   googleID?: string;
   password: string;
   token: string;

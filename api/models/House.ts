@@ -13,7 +13,6 @@ const HouseSchema = new Schema({
       message: 'User does not exist',
     },
   },
-// Todo можно добавить description
   area: {
     type: String,
     required: true,
@@ -29,13 +28,17 @@ const HouseSchema = new Schema({
     required: true,
   },
 
+  description: {
+    type: String
+  },
+
   image: {
     type: String
   },
 
   isPublished: {
-    type:Boolean,
-    default:false
+    type: Boolean,
+    default: false
   }
 
 });

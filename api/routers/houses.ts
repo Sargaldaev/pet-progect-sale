@@ -31,7 +31,7 @@ housesRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next
   }
 });
 
-housesRouter.get('/', auth, async (req, res, next) => {
+housesRouter.get('/',  async (req, res, next) => {
 
   try {
     const houses = await House.find();

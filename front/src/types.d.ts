@@ -1,9 +1,3 @@
-export interface Register {
-  username: string;
-  password: string;
-  displayName: string;
-}
-
 export interface User {
   _id: string;
   role: string;
@@ -12,6 +6,33 @@ export interface User {
   password: string;
   token: string;
 }
+
+export interface Houses {
+  _id: string;
+  user: string,
+  area: string,
+  price: string,
+  numberOfRooms: string,
+  description: string,
+  image: string | null,
+  isPublished: boolean
+}
+
+export interface HouseCreate {
+  area: string,
+  price: string,
+  numberOfRooms: string,
+  description: string,
+  image: File | null,
+}
+
+export interface Register {
+  username: string;
+  password: string;
+  displayName: string;
+  phoneNumber: string;
+}
+
 
 export interface Login {
   username: string;

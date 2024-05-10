@@ -25,13 +25,14 @@ const darkTheme = createTheme({
 });
 
 const Register = () => {
-  const { registerLoading, registerError } = useSelector((state: RootState) => state.user);
+  const {registerLoading, registerError} = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [users, setUsers] = useState<reg>({
     username: '',
     password: '',
     displayName: '',
+    phoneNumber: ''
   });
 
 
@@ -53,7 +54,7 @@ const Register = () => {
     }
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+    const {name, value, files} = e.target;
     setUsers((prevState) => ({
       ...prevState,
       [name]: files ? files[0] : value,
@@ -68,7 +69,7 @@ const Register = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline/>
         <Box
           sx={{
             marginTop: 8,
@@ -77,13 +78,13 @@ const Register = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+            <LockOutlinedIcon/>
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={onFormSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={onFormSubmit} sx={{mt: 3}}>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
                 if (credentialResponse.credential) {
@@ -140,20 +141,37 @@ const Register = () => {
                   helperText={getFieldError('password')}
                 />
               </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  label="phoneNumber"
+                  type="text"
+                  id="phoneNumber"
+                  autoComplete="new-phoneNumber"
+                  onChange={onChange}
+                  value={users.phoneNumber}
+                  error={Boolean(getFieldError('phoneNumber'))}
+                  helperText={getFieldError('phoneNumber')}
+                />
+              </Grid>
+
             </Grid>
             <Button
               type="submit"
               color={'success'}
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{mt: 3, mb: 2}}
               disabled={!!registerLoading}
             >
-              {registerLoading ? <CircularProgress /> : 'Sign Up'}
+              {registerLoading ? <CircularProgress/> : 'Sign Up'}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <NavLink to="/login" style={{ color: 'blue' }}>
+                <NavLink to="/login" style={{color: 'blue'}}>
                   Already have an account? Sign in
                 </NavLink>
               </Grid>

@@ -8,17 +8,8 @@ export const register = createAsyncThunk<User, Register, { rejectValue: Validati
   'user/register',
   async (user, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
 
-      const keys = Object.keys(user) as (keyof Register)[];
-      keys.forEach((key) => {
-        const value = user[key];
-
-        if (value !== null) {
-          formData.append(key, value);
-        }
-      });
-      const { data } = await axiosApi.post<User>('/users', formData);
+      const { data } = await axiosApi.post<User>('/users', user);
       return data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 422) {

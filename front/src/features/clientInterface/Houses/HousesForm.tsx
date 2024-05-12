@@ -17,10 +17,11 @@ const darkTheme = createTheme({
 const HousesForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {user} = useSelector((state: RootState) => state.user);
+  const {createLoad} = useSelector((state: RootState) => state.houses);
 
   const navigate = useNavigate();
   const [state, setState] = useState<HouseCreate>({
-    area: '',
+    district: '',
     price: '',
     numberOfRooms: '',
     description: '',
@@ -70,9 +71,9 @@ const HousesForm = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Район"
-                  name="area"
+                  name="district"
                   autoComplete="new-area"
-                  value={state.area}
+                  value={state.district}
                   onChange={onChange}
                   fullWidth={true}
                   required
@@ -127,9 +128,9 @@ const HousesForm = () => {
               color={'success'}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              // disabled={!!loginLoad}
+              disabled={!!createLoad}
             >
-             Добавить
+              Добавить
             </Button>
           </Box>
         </Box>

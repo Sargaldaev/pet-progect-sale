@@ -7,10 +7,15 @@ export interface User {
   token: string;
 }
 
+export interface District {
+  _id: string;
+  name: string;
+}
+
 export interface Houses {
   _id: string;
   user: string,
-  area: string,
+  district: string
   price: string,
   numberOfRooms: string,
   description: string,
@@ -19,7 +24,7 @@ export interface Houses {
 }
 
 export interface HouseCreate {
-  area: string,
+  district: string,
   price: string,
   numberOfRooms: string,
   description: string,

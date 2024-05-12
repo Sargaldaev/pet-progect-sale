@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import User from './User';
+import District from './District';
 
 const Schema = mongoose.Schema;
 
@@ -13,9 +14,15 @@ const HouseSchema = new Schema({
       message: 'User does not exist',
     },
   },
-  area: {
-    type: String,
+
+  district: {
+    type: mongoose.Types.ObjectId,
+    ref: 'District',
     required: true,
+    validate: {
+      validator: async (value: mongoose.Types.ObjectId) => await District.findById(value),
+      message: 'District does not exist',
+    },
   },
 
   price: {
@@ -29,18 +36,17 @@ const HouseSchema = new Schema({
   },
 
   description: {
-    type: String
+    type: String,
   },
 
   image: {
-    type: String
+    type: String,
   },
 
   isPublished: {
     type: Boolean,
-    default: false
-  }
-
+    default: false,
+  },
 });
 
 const House = mongoose.model('House', HouseSchema);

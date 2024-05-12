@@ -1,19 +1,25 @@
-import { Houses } from '../../types';
+import { District, Houses } from '../../types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createHouse, deleteHouse, fetchData } from './housesThunk.ts';
+import { createHouse, deleteHouse, fetchData, fetchDistricts, getFullInfo } from './housesThunk.ts';
 
 export interface HouseState {
   houses: Houses[];
+  houseFullInfo: Houses | null;
+  districts: District[];
   fetchLoad: boolean;
+  fetchLoadFullInfo:boolean,
   createLoad: boolean;
-  deleteLoad:string;
+  deleteLoad: string;
 }
 
 const initialState: HouseState = {
   houses: [],
+  houseFullInfo: null,
+  districts:[],
   fetchLoad: false,
+  fetchLoadFullInfo:false,
   createLoad: false,
-  deleteLoad:''
+  deleteLoad: ''
 };
 
 export const houseSlice = createSlice({
@@ -32,6 +38,22 @@ export const houseSlice = createSlice({
       state.fetchLoad = false;
     });
 
+    builder.addCase(fetchDistricts.fulfilled, (state: HouseState, action: PayloadAction<District[]>) => {
+      state.districts = action.payload;
+    });
+
+
+    builder.addCase(getFullInfo.pending, (state: HouseState) => {
+      state.fetchLoadFullInfo = true;
+    });
+    builder.addCase(getFullInfo.fulfilled, (state: HouseState, action: PayloadAction<Houses>) => {
+      state.fetchLoadFullInfo = false;
+      state.houseFullInfo = action.payload || null;
+    });
+    builder.addCase(getFullInfo.rejected, (state: HouseState) => {
+      state.fetchLoadFullInfo = false;
+    });
+
 
     builder.addCase(createHouse.pending, (state: HouseState) => {
       state.createLoad = true;
@@ -44,8 +66,8 @@ export const houseSlice = createSlice({
     });
 
 
-    builder.addCase(deleteHouse.pending, (state: HouseState,action) => {
-      state.deleteLoad = action.meta.arg  || '';
+    builder.addCase(deleteHouse.pending, (state: HouseState, action) => {
+      state.deleteLoad = action.meta.arg || '';
     });
     builder.addCase(deleteHouse.fulfilled, (state: HouseState) => {
       state.deleteLoad = '';

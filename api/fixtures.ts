@@ -4,7 +4,6 @@ import User from './models/User';
 import * as crypto from 'crypto';
 import House from './models/House';
 import District from './models/District';
-import district from './models/District';
 
 const run = async () => {
   await mongoose.connect(config.db);
@@ -12,8 +11,8 @@ const run = async () => {
 
   try {
     await db.dropCollection('users');
-    await db.dropCollection('houses');
     await db.dropCollection('districts');
+    await db.dropCollection('houses');
   } catch (e) {
     console.log('Collections were not present, skipping drop...');
   }
@@ -37,67 +36,50 @@ const run = async () => {
     },
   );
 
-  const [district1, district2, district3, district4] = await District.create(
-    {name: 'Джал'},
-    {name: 'Асанбай'},
-    {name: 'Политех'},
-    {name: '5мкр'}
+  const [district_01, district_02, district_03, district_04] = await District.create(
+    { name: 'Октябрьский район' },
+    { name: 'Первомайский район' },
+    { name: 'Свердловский район' },
+    { name: 'Ленинский район' },
   );
 
   await House.create(
     {
       user: user._id,
-      district: district1._id,
+      district: district_01._id,
       price: '150к$',
       numberOfRooms: 2,
-      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n' +
-        '            A architecto asperiores blanditiis debitis eligendi illum ipsum\n' +
-        '            iste itaque modi officia omnis porro quis reiciendis rem repudiandae sit,\n' +
-        '            sunt totam ut.',
       image: 'fixtures/house.jpeg',
-      isPublished: true
+      isPublished: true,
     },
 
     {
       user: user._id,
-      district: district2._id,
+      district: district_02._id,
       price: '73к$',
       numberOfRooms: 3,
-      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n' +
-        '            A architecto asperiores blanditiis debitis eligendi illum ipsum\n' +
-        '            iste itaque modi officia omnis porro quis reiciendis rem repudiandae sit,\n' +
-        '            sunt totam ut.',
       image: 'fixtures/house.jpeg',
-      isPublished: true
+      isPublished: true,
     },
 
     {
       user: admin._id,
-      district: district3._id,
+      district: district_03._id,
       price: '100к$',
       numberOfRooms: 1,
-      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n' +
-        '            A architecto asperiores blanditiis debitis eligendi illum ipsum\n' +
-        '            iste itaque modi officia omnis porro quis reiciendis rem repudiandae sit,\n' +
-        '            sunt totam ut.',
       image: 'fixtures/house.jpeg',
-      isPublished: true
+      isPublished: true,
     },
 
     {
       user: admin._id,
-      district: district4._id,
+      district: district_04._id,
       price: '50к$',
-      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n' +
-        '            A architecto asperiores blanditiis debitis eligendi illum ipsum\n' +
-        '            iste itaque modi officia omnis porro quis reiciendis rem repudiandae sit,\n' +
-        '            sunt totam ut.',
       numberOfRooms: 1,
       image: 'fixtures/house.jpeg',
-      isPublished: true
+      isPublished: true,
     },
   );
-
 
   await db.close();
 };

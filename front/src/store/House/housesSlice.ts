@@ -1,10 +1,10 @@
-import { District, Houses } from '../../types';
+import { District, HouseFullInfo, Houses } from '../../types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createHouse, deleteHouse, fetchData, fetchDistricts, getFullInfo } from './housesThunk.ts';
 
 export interface HouseState {
   houses: Houses[];
-  houseFullInfo: Houses | null;
+  houseFullInfo: HouseFullInfo | null;
   districts: District[];
   fetchLoad: boolean;
   fetchLoadFullInfo:boolean,
@@ -46,7 +46,7 @@ export const houseSlice = createSlice({
     builder.addCase(getFullInfo.pending, (state: HouseState) => {
       state.fetchLoadFullInfo = true;
     });
-    builder.addCase(getFullInfo.fulfilled, (state: HouseState, action: PayloadAction<Houses>) => {
+    builder.addCase(getFullInfo.fulfilled, (state: HouseState, action: PayloadAction<HouseFullInfo>) => {
       state.fetchLoadFullInfo = false;
       state.houseFullInfo = action.payload || null;
     });

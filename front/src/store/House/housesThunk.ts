@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { District, HouseCreate, Houses } from '../../types';
+import { District, HouseCreate, HouseFullInfo, Houses } from '../../types';
 import axiosApi from '../../axiosApi.ts';
 
 export const fetchData = createAsyncThunk<Houses[]>(
@@ -15,11 +15,11 @@ export const fetchData = createAsyncThunk<Houses[]>(
   },
 );
 
-export const getFullInfo = createAsyncThunk<Houses,string>(
+export const getFullInfo = createAsyncThunk<HouseFullInfo,string>(
   'house/getFullInfo',
   async (id) => {
     try {
-      const {data} = await axiosApi.get<Houses>(`houses/${id}`);
+      const {data} = await axiosApi.get<HouseFullInfo>(`houses/${id}`);
       return data;
     } catch (e) {
       console.log('Caught on try', e);

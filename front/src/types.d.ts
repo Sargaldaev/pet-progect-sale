@@ -23,6 +23,17 @@ export interface Houses {
   isPublished: boolean
 }
 
+export interface HouseFullInfo {
+  _id: string;
+  user: string,
+  district: District,
+  price: string,
+  numberOfRooms: string,
+  description: string,
+  image: string | null,
+  isPublished: boolean
+}
+
 export interface HouseCreate {
   district: string,
   price: string,

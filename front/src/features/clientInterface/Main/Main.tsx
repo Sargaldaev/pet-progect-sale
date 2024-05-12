@@ -12,10 +12,10 @@ const Main = () => {
   }, [navigate]);
   return (
     <>
-      <CardMedia
-        sx={{width: '100%', height: '500px'}}
-        image={main}
-      />
+      {/*<CardMedia*/}
+      {/*  sx={{width: '100%', height: '500px'}}*/}
+      {/*  image={main}*/}
+      {/*/>*/}
       <Outlet/>
     </>
   );

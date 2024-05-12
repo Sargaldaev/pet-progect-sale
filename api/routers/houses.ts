@@ -32,9 +32,25 @@ housesRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next
 
 housesRouter.get('/', async (req, res, next) => {
   try {
-    const houses = await House.find().populate('district');
+    const houses = await House.find()
 
     return res.send(houses);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+housesRouter.get('/getByCategory', async (req, res, next) => {
+  try {
+
+    const filteredHouses = await House.find({
+      district: '6640aa712ca7e00742e492ab',
+      price: {$gte: 12, $lte: 160},
+      numberOfRooms: 2
+    });
+    console.log(filteredHouses);
+
+    return res.send(filteredHouses);
   } catch (error) {
     return next(error);
   }
@@ -43,10 +59,10 @@ housesRouter.get('/', async (req, res, next) => {
 housesRouter.get('/:id', async (req, res) => {
   const _id = req.params.id;
   try {
-    const house = await House.findById(_id);
+    const house = await House.findById(_id).populate('district');
 
     if (!house) {
-      return res.send({ message: 'Id not found' });
+      return res.send({message: 'Id not found'});
     }
 
     return res.send(house);
@@ -65,24 +81,24 @@ housesRouter.delete('/:id', auth, permit('admin', 'user'), async (req, res) => {
     if (user.role === 'admin') {
       const house = await House.findByIdAndDelete(_id);
       if (!house) {
-        return res.status(404).send({ message: 'House not found' });
+        return res.status(404).send({message: 'House not found'});
       }
-      return res.send({ message: 'House deleted' });
+      return res.send({message: 'House deleted'});
     }
 
-    const houseId = await House.findOne({ _id });
+    const houseId = await House.findOne({_id});
     const houseUser = houseId?.user.toString();
     const isPublished = houseId?.isPublished;
 
     if (!houseId) {
-      return res.status(404).send({ message: 'House not found' });
+      return res.status(404).send({message: 'House not found'});
     }
 
     if (userId === houseUser && isPublished === false) {
-      await House.deleteOne({ _id: houseId._id });
-      return res.send({ message: 'House deleted' });
+      await House.deleteOne({_id: houseId._id});
+      return res.send({message: 'House deleted'});
     } else if (userId !== houseUser || isPublished === true) {
-      return res.send({ message: 'Cannot be deleted' });
+      return res.send({message: 'Cannot be deleted'});
     }
   } catch (e) {
     return res.send(e);
@@ -94,15 +110,15 @@ housesRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, re
     const houseId = req.params.id;
     const house = await House.findById(houseId);
     if (!house) {
-      return res.status(404).send({ message: 'House not found' });
+      return res.status(404).send({message: 'House not found'});
     }
 
     house.isPublished = !house.isPublished;
     await house.save();
 
-    res.send({ message: 'House publication status toggled successfully' });
+    res.send({message: 'House publication status toggled successfully'});
   } catch (e) {
-    res.status(500).send({ error: 'Internal Server Error' });
+    res.status(500).send({error: 'Internal Server Error'});
   }
 });
 
@@ -116,7 +132,7 @@ housesRouter.patch(
       const _id = req.params.id;
 
       const house = await House.findOneAndUpdate(
-        { _id },
+        {_id},
         {
           district: req.body.district,
           price: req.body.price,
@@ -126,12 +142,12 @@ housesRouter.patch(
       );
 
       if (!house) {
-        return res.status(404).send({ message: 'House not found' });
+        return res.status(404).send({message: 'House not found'});
       }
 
-      res.send({ message: 'House filed updated' });
+      res.send({message: 'House filed updated'});
     } catch (e) {
-      res.status(500).send({ error: 'Internal Server Error' });
+      res.status(500).send({error: 'Internal Server Error'});
     }
   },
 );

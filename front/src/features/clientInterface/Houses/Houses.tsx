@@ -5,7 +5,7 @@ import { deleteHouse, fetchData, fetchDistricts } from '../../../store/House/hou
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from 'react-router-dom';
-
+import HouseSearchByCategory from './HouseSearchByCategory.tsx';
 
 const Houses = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,7 +17,6 @@ const Houses = () => {
     (async () => {
       await dispatch(fetchDistricts());
       await dispatch(fetchData());
-
     })();
 
   }, [dispatch]);
@@ -28,11 +27,13 @@ const Houses = () => {
   };
   return (
     <>
+      <HouseSearchByCategory/>
       <Box>
         <Box display={'flex'} flexWrap={'wrap'} sx={{gap: '10px'}}>
           {fetchLoad ? (
             <CircularProgress/>
           ) : (
+            houses.length === 0 ? 'По вашему запросу ничего не найдено' :
             houses.map(house => ({
               ...house,
               district: districts.find(item => item._id === house.district)?.name,

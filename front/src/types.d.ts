@@ -34,6 +34,18 @@ export interface HouseFullInfo {
   isPublished: boolean
 }
 
+export interface SearchByCategory {
+  district: string,
+  priceFrom:string,
+  priceTo:string
+  numberOfRooms:string
+}
+
+export interface HouseResponse {
+  message: string;
+  houses: Houses[];
+}
+
 export interface HouseCreate {
   district: string,
   price: string,

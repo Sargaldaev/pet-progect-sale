@@ -1,23 +1,34 @@
 import { District, HouseFullInfo, Houses } from '../../types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createHouse, deleteHouse, fetchData, fetchDistricts, getFullInfo } from './housesThunk.ts';
+import {
+  createHouse,
+  deleteHouse,
+  fetchData,
+  fetchDistricts,
+  getFullInfo,
+  houseSearchByCategory
+} from './housesThunk.ts';
 
 export interface HouseState {
   houses: Houses[];
+  housesByCategory: Houses[];
   houseFullInfo: HouseFullInfo | null;
   districts: District[];
   fetchLoad: boolean;
   fetchLoadFullInfo:boolean,
   createLoad: boolean;
+  searchLoad: boolean;
   deleteLoad: string;
 }
 
 const initialState: HouseState = {
   houses: [],
+  housesByCategory:[],
   houseFullInfo: null,
   districts:[],
   fetchLoad: false,
   fetchLoadFullInfo:false,
+  searchLoad:false,
   createLoad: false,
   deleteLoad: ''
 };
@@ -30,9 +41,9 @@ export const houseSlice = createSlice({
     builder.addCase(fetchData.pending, (state: HouseState) => {
       state.fetchLoad = true;
     });
-    builder.addCase(fetchData.fulfilled, (state: HouseState, action: PayloadAction<Houses[]>) => {
+    builder.addCase(fetchData.fulfilled, (state: HouseState, { payload }) => {
       state.fetchLoad = false;
-      state.houses = action.payload;
+      state.houses = payload.houses;
     });
     builder.addCase(fetchData.rejected, (state: HouseState) => {
       state.fetchLoad = false;
@@ -63,6 +74,18 @@ export const houseSlice = createSlice({
     });
     builder.addCase(createHouse.rejected, (state: HouseState) => {
       state.createLoad = false;
+    });
+
+    builder.addCase(houseSearchByCategory.pending, (state: HouseState) => {
+      state.searchLoad = true;
+    });
+    builder.addCase(houseSearchByCategory.fulfilled, (state: HouseState,{payload}) => {
+      console.log(payload);
+      state.houses = payload.houses
+      state.searchLoad = false;
+    });
+    builder.addCase(houseSearchByCategory.rejected, (state: HouseState) => {
+      state.searchLoad = false;
     });
 
 

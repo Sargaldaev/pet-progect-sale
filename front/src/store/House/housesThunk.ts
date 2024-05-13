@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { District, HouseCreate, HouseFullInfo, Houses } from '../../types';
+import { District, HouseCreate, HouseFullInfo, HouseResponse, SearchByCategory } from '../../types';
 import axiosApi from '../../axiosApi.ts';
 
-export const fetchData = createAsyncThunk<Houses[]>(
+export const fetchData = createAsyncThunk<HouseResponse>(
   'house/fetchData',
   async () => {
     try {
-      const {data} = await axiosApi.get<Houses[]>('houses');
+      const {data} = await axiosApi.get<HouseResponse>('houses');
       return data;
     } catch (e) {
       console.log('Caught on try - FETCH ALL', e);
@@ -15,7 +15,7 @@ export const fetchData = createAsyncThunk<Houses[]>(
   },
 );
 
-export const getFullInfo = createAsyncThunk<HouseFullInfo,string>(
+export const getFullInfo = createAsyncThunk<HouseFullInfo, string>(
   'house/getFullInfo',
   async (id) => {
     try {
@@ -33,7 +33,8 @@ export const fetchDistricts = createAsyncThunk<District[]>(
   'house/fetchDistricts',
   async () => {
     try {
-      const { data } = await axiosApi.get<District[]>('districts');
+      const {data} = await axiosApi.get<District[]>('districts');
+      console.log(data);
       return data;
     } catch (e) {
       console.log('Caught on try - FETCH ALL', e);
@@ -55,6 +56,16 @@ export const createHouse = createAsyncThunk<void, HouseCreate>( //Todo форм�
       formData.append('image', house.image);
     }
     await axiosApi.post('/houses', formData);
+  },
+);
+
+
+export const houseSearchByCategory = createAsyncThunk<HouseResponse, SearchByCategory>(
+  'house/houseSearchByCategory',
+  async (house) => {
+
+    const {data} = await axiosApi.post('/houses/searchByCategory', house);
+    return data;
   },
 );
 

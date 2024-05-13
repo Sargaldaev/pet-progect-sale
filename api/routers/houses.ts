@@ -35,7 +35,8 @@ housesRouter.get('/', async (req, res, next) => {
   try {
     const houses = await House.find();
 
-    return res.send(houses);
+    return res.send({message: 'Недвижимости которые были найдены', houses});
+
   } catch (error) {
     return next(error);
   }
@@ -43,7 +44,6 @@ housesRouter.get('/', async (req, res, next) => {
 
 housesRouter.post('/searchByCategory', async (req, res, next) => {
   try {
-
     const searchByCategory: SearchByCategory = {
       district: req.body.district,
       priceFrom: req.body.priceFrom,
@@ -51,19 +51,67 @@ housesRouter.post('/searchByCategory', async (req, res, next) => {
       numberOfRooms: req.body.numberOfRooms,
     };
 
-
-    const filteredHouses = await House.find({
-      district: searchByCategory.district,
-      price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
-      numberOfRooms: searchByCategory.numberOfRooms
-    })
-
-    if (!filteredHouses.length) {
-      const houses = await House.find()
-      return res.send({message: 'Нет совпадений по вашему запросу, так же можете посмотреть эти объявлении',houses});
+    if (!searchByCategory.priceFrom && !searchByCategory.priceTo && !searchByCategory.district) {
+      const houses = await House.find({
+        numberOfRooms: searchByCategory.numberOfRooms
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
     }
 
-    return res.send(filteredHouses);
+    if (!searchByCategory.numberOfRooms && !searchByCategory.district) {
+      const houses = await House.find({
+        price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
+    }
+
+    if (!searchByCategory.numberOfRooms && !searchByCategory.priceTo && !searchByCategory.priceFrom) {
+
+      const houses = await House.find({
+        district: searchByCategory.district,
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
+    }
+
+
+    if (!searchByCategory.district) {
+      const houses = await House.find({
+        price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
+        numberOfRooms: searchByCategory.numberOfRooms
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
+    }
+
+    if (!searchByCategory.priceFrom && !searchByCategory.priceTo) {
+      const houses = await House.find({
+        district: searchByCategory.district,
+        numberOfRooms: searchByCategory.numberOfRooms
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
+    }
+
+
+    if (!searchByCategory.numberOfRooms) {
+      const houses = await House.find({
+        district: searchByCategory.district,
+        price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
+      });
+      return res.send({message: 'Недвижимости которые были найдены', houses});
+    }
+
+
+    const houses = await House.find({
+      district: searchByCategory.district ? searchByCategory.district : '',
+      price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
+      numberOfRooms: searchByCategory.numberOfRooms
+    });
+
+    if (!houses.length) {
+      const houses = await House.find();
+      return res.send({message: 'Нет совпадений по вашему запросу, так же можете посмотреть эти объявлении', houses});
+    }
+
+    return res.send({message: 'Недвижимости которые были найдены', houses});
   } catch (error) {
     return next(error);
   }

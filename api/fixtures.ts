@@ -37,18 +37,38 @@ const run = async () => {
   );
 
   const [district_01, district_02, district_03, district_04] = await District.create(
-    { name: 'Октябрьский район' },
-    { name: 'Первомайский район' },
-    { name: 'Свердловский район' },
-    { name: 'Ленинский район' },
+    {name: 'Октябрьский район'},
+    {name: 'Первомайский район'},
+    {name: 'Свердловский район'},
+    {name: 'Ленинский район'},
   );
-
   await House.create(
     {
       user: user._id,
       district: district_01._id,
       price: '150к$',
-      numberOfRooms: 2,
+      numberOfRooms: 3,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
+      image: 'fixtures/house.jpeg',
+      isPublished: true,
+    },
+    {
+      user: user._id,
+      district: district_01._id,
+      price: '200к$',
+      numberOfRooms: 3,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
+      image: 'fixtures/house.jpeg',
+      isPublished: true,
+    }, {
+      user: user._id,
+      district: district_01._id,
+      price: '120к$',
+      numberOfRooms: 3,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
       image: 'fixtures/house.jpeg',
       isPublished: true,
     },
@@ -58,6 +78,8 @@ const run = async () => {
       district: district_02._id,
       price: '73к$',
       numberOfRooms: 3,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
       image: 'fixtures/house.jpeg',
       isPublished: true,
     },
@@ -67,6 +89,8 @@ const run = async () => {
       district: district_03._id,
       price: '100к$',
       numberOfRooms: 1,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
       image: 'fixtures/house.jpeg',
       isPublished: true,
     },
@@ -76,6 +100,8 @@ const run = async () => {
       district: district_04._id,
       price: '50к$',
       numberOfRooms: 1,
+      description: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam architecto delectus deserunt\n' +
+        '  dignissimos dolor ea fugit in incidunt modi nostrum, officiis quae qui quod reiciendis sapiente veniam vero!',
       image: 'fixtures/house.jpeg',
       isPublished: true,
     },

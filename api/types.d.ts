@@ -7,3 +7,10 @@ export interface UserFields {
   token: string;
   role: string;
 }
+
+export interface SearchByCategory {
+  district: string,
+  priceFrom: string,
+  priceTo: string,
+  numberOfRooms: number,
+}

@@ -1,5 +1,3 @@
-import { CardMedia } from '@mui/material';
-import main from '../../../assets/main-pic.jpg';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 

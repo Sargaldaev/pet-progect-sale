@@ -10,7 +10,7 @@ import { apiUrl } from '../../../constans.ts';
 const HouseFullInfo = () => {
   const {id} = useParams() as { id: string };
   const dispatch = useDispatch<AppDispatch>();
-  const {houseFullInfo,districts, fetchLoadFullInfo} = useSelector((state: RootState) => state.houses);
+  const {houseFullInfo, fetchLoadFullInfo} = useSelector((state: RootState) => state.houses);
   // const { user } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const HouseFullInfo = () => {
       dispatch(getFullInfo(id));
     }
 
-    dispatch(fetchDistricts())
+    dispatch(fetchDistricts());
   }, [dispatch, id]);
   return houseFullInfo && (
     <>

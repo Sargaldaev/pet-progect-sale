@@ -4,6 +4,7 @@ import House from '../models/House';
 import auth, { RequestWithUser } from '../middleware/auth';
 import { imagesUpload } from '../multer';
 import permit from '../middleware/permit';
+import { SearchByCategory } from '../types';
 
 const housesRouter = express.Router();
 
@@ -32,7 +33,7 @@ housesRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next
 
 housesRouter.get('/', async (req, res, next) => {
   try {
-    const houses = await House.find()
+    const houses = await House.find();
 
     return res.send(houses);
   } catch (error) {
@@ -40,15 +41,27 @@ housesRouter.get('/', async (req, res, next) => {
   }
 });
 
-housesRouter.get('/getByCategory', async (req, res, next) => {
+housesRouter.post('/searchByCategory', async (req, res, next) => {
   try {
 
+    const searchByCategory: SearchByCategory = {
+      district: req.body.district,
+      priceFrom: req.body.priceFrom,
+      priceTo: req.body.priceTo,
+      numberOfRooms: req.body.numberOfRooms,
+    };
+
+
     const filteredHouses = await House.find({
-      district: '6640aa712ca7e00742e492ab',
-      price: {$gte: 12, $lte: 160},
-      numberOfRooms: 2
-    });
-    console.log(filteredHouses);
+      district: searchByCategory.district,
+      price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
+      numberOfRooms: searchByCategory.numberOfRooms
+    })
+
+    if (!filteredHouses.length) {
+      const houses = await House.find()
+      return res.send({message: 'Нет совпадений по вашему запросу, так же можете посмотреть эти объявлении',houses});
+    }
 
     return res.send(filteredHouses);
   } catch (error) {

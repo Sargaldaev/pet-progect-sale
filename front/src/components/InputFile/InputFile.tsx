@@ -5,7 +5,7 @@ import { Button, TextField } from '@mui/material';
 interface IProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
-  image: File | null;
+  image: File | string | null;
 }
 
 const InputFile: React.FC<IProps> = ({ onChange, name, image }) => {
@@ -16,6 +16,8 @@ const InputFile: React.FC<IProps> = ({ onChange, name, image }) => {
   useEffect(() => {
     if (image === null) {
       setFilename('');
+    } else if (typeof image === 'string') {
+      setFilename(image);
     }
   }, [image]);
 

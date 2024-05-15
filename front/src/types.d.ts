@@ -51,7 +51,7 @@ export interface HouseCreate {
   price: string,
   numberOfRooms: string,
   description: string,
-  image: File | null,
+  image: File | string | null,
 }
 
 export interface Register {

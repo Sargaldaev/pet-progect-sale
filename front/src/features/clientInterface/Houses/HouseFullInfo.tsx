@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../app/store.ts';
 import { fetchDistricts, getFullInfo } from '../../../store/House/housesThunk.ts';
@@ -11,7 +11,7 @@ const HouseFullInfo = () => {
   const {id} = useParams() as { id: string };
   const dispatch = useDispatch<AppDispatch>();
   const {houseFullInfo, fetchLoadFullInfo} = useSelector((state: RootState) => state.houses);
-  // const { user } = useSelector((state: RootState) => state.user);
+  const {user} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (id) {
@@ -27,9 +27,9 @@ const HouseFullInfo = () => {
       ) : (
         <>
           <Button component={Link} to={`/houses`} size="small">
-            Back
+            Назад
           </Button>
-          <Box display="flex">
+          <Box display="flex" position="relative">
             <Box>
               <CardMedia
                 sx={{height: 570, width: 470}}
@@ -54,7 +54,21 @@ const HouseFullInfo = () => {
                 Описание: {houseFullInfo.description}
               </Typography>
             </Box>
+
+            {
+              user?._id === houseFullInfo.user ? (
+
+                <Button component={Link} to="edit" size="small"
+                        variant="contained" color="success"
+                        sx={{height: 'min-content', position: 'absolute', right: 0}}
+                >
+                  Изменить
+                </Button>
+              ) : null
+            }
           </Box>
+
+          <Outlet/>
         </>
       )}
     </>

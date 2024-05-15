@@ -9,8 +9,16 @@ export interface UserFields {
 }
 
 export interface SearchByCategory {
-  district: string,
-  priceFrom: string,
-  priceTo: string,
-  numberOfRooms: number,
+  district: string;
+  priceFrom: string;
+  priceTo: string;
+  numberOfRooms: number;
+}
+
+export interface HouseEdit {
+  district?: string;
+  price?: string;
+  numberOfRooms?: string;
+  description?: string;
+  image?: string;
 }

@@ -7,10 +7,10 @@ import Main from './features/clientInterface/Main/Main.tsx';
 import Houses from './features/clientInterface/Houses/Houses.tsx';
 import HousesForm from './features/clientInterface/Houses/HousesForm.tsx';
 import HouseFullInfo from './features/clientInterface/Houses/HouseFullInfo.tsx';
+import HouseEditModal from './features/clientInterface/Houses/HouseEditModal.tsx';
 
 function App() {
   // const {user} = useSelector((state: RootState) => state.user);
-
 
   const darkTheme = createTheme({
     palette: {
@@ -27,7 +27,9 @@ function App() {
             <Route path={'/'} element={<Main/>}>
               <Route path={'/houses'} element={<Houses/>}/>
             </Route>
-            <Route path={'/house/:id'} element={<HouseFullInfo/>}/>
+            <Route path={'/house/:id'} element={<HouseFullInfo/>}>
+              <Route path={'edit'} element={<HouseEditModal/>}/>
+            </Route>
             <Route path={'/addHouse'} element={<HousesForm/>}/>
             <Route path={'/register'} element={<Register/>}/>
             <Route path={'/login'} element={<Login/>}/>
@@ -40,5 +42,4 @@ function App() {
 }
 
 export default App;
-
 

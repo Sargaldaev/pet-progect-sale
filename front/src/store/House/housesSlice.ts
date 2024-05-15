@@ -2,11 +2,11 @@ import { District, HouseFullInfo, Houses } from '../../types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   createHouse,
-  deleteHouse,
+  deleteHouse, editHouse,
   fetchData,
   fetchDistricts,
   getFullInfo,
-  houseSearchByCategory
+  houseSearchByCategory,
 } from './housesThunk.ts';
 
 export interface HouseState {
@@ -17,6 +17,7 @@ export interface HouseState {
   fetchLoad: boolean;
   fetchLoadFullInfo:boolean,
   createLoad: boolean;
+  editLoad: boolean;
   searchLoad: boolean;
   deleteLoad: string;
 }
@@ -30,6 +31,7 @@ const initialState: HouseState = {
   fetchLoadFullInfo:false,
   searchLoad:false,
   createLoad: false,
+  editLoad: false,
   deleteLoad: ''
 };
 
@@ -76,11 +78,20 @@ export const houseSlice = createSlice({
       state.createLoad = false;
     });
 
+    builder.addCase(editHouse.pending, (state: HouseState) => {
+      state.editLoad = true;
+    });
+    builder.addCase(editHouse.fulfilled, (state: HouseState) => {
+      state.editLoad = false;
+    });
+    builder.addCase(editHouse.rejected, (state: HouseState) => {
+      state.editLoad = false;
+    });
+
     builder.addCase(houseSearchByCategory.pending, (state: HouseState) => {
       state.searchLoad = true;
     });
     builder.addCase(houseSearchByCategory.fulfilled, (state: HouseState,{payload}) => {
-      console.log(payload);
       state.houses = payload.houses
       state.searchLoad = false;
     });

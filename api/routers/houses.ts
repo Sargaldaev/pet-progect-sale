@@ -4,7 +4,7 @@ import House from '../models/House';
 import auth, { RequestWithUser } from '../middleware/auth';
 import { imagesUpload } from '../multer';
 import permit from '../middleware/permit';
-import { SearchByCategory } from '../types';
+import { HouseEdit, SearchByCategory } from '../types';
 
 const housesRouter = express.Router();
 
@@ -36,7 +36,6 @@ housesRouter.get('/', async (req, res, next) => {
     const houses = await House.find();
 
     return res.send({message: 'Недвижимости которые были найдены', houses});
-
   } catch (error) {
     return next(error);
   }
@@ -53,7 +52,7 @@ housesRouter.post('/searchByCategory', async (req, res, next) => {
 
     if (!searchByCategory.priceFrom && !searchByCategory.priceTo && !searchByCategory.district) {
       const houses = await House.find({
-        numberOfRooms: searchByCategory.numberOfRooms
+        numberOfRooms: searchByCategory.numberOfRooms,
       });
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
@@ -65,19 +64,21 @@ housesRouter.post('/searchByCategory', async (req, res, next) => {
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
 
-    if (!searchByCategory.numberOfRooms && !searchByCategory.priceTo && !searchByCategory.priceFrom) {
-
+    if (
+      !searchByCategory.numberOfRooms &&
+      !searchByCategory.priceTo &&
+      !searchByCategory.priceFrom
+    ) {
       const houses = await House.find({
         district: searchByCategory.district,
       });
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
 
-
     if (!searchByCategory.district) {
       const houses = await House.find({
         price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
-        numberOfRooms: searchByCategory.numberOfRooms
+        numberOfRooms: searchByCategory.numberOfRooms,
       });
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
@@ -85,11 +86,10 @@ housesRouter.post('/searchByCategory', async (req, res, next) => {
     if (!searchByCategory.priceFrom && !searchByCategory.priceTo) {
       const houses = await House.find({
         district: searchByCategory.district,
-        numberOfRooms: searchByCategory.numberOfRooms
+        numberOfRooms: searchByCategory.numberOfRooms,
       });
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
-
 
     if (!searchByCategory.numberOfRooms) {
       const houses = await House.find({
@@ -99,16 +99,18 @@ housesRouter.post('/searchByCategory', async (req, res, next) => {
       return res.send({message: 'Недвижимости которые были найдены', houses});
     }
 
-
     const houses = await House.find({
       district: searchByCategory.district ? searchByCategory.district : '',
       price: {$gte: `${searchByCategory.priceFrom}к$`, $lte: `${searchByCategory.priceTo}к$`},
-      numberOfRooms: searchByCategory.numberOfRooms
+      numberOfRooms: searchByCategory.numberOfRooms,
     });
 
     if (!houses.length) {
       const houses = await House.find();
-      return res.send({message: 'Нет совпадений по вашему запросу, так же можете посмотреть эти объявлении', houses});
+      return res.send({
+        message: 'Нет совпадений по вашему запросу, так же можете посмотреть эти объявлении',
+        houses,
+      });
     }
 
     return res.send({message: 'Недвижимости которые были найдены', houses});
@@ -186,29 +188,46 @@ housesRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, re
 housesRouter.patch(
   '/:id',
   auth,
-  permit('admin'),
+  permit('user'),
   imagesUpload.single('image'),
-  async (req, res) => {
+  async (req, res, next) => {
+    const user = (req as RequestWithUser).user;
+    const userId = user._id.toString();
+
     try {
       const _id = req.params.id;
+      const houseId = await House.findById(_id);
+      const houseUser = houseId?.user.toString();
+      const file = req.file ? req.file.filename : null;
 
-      const house = await House.findOneAndUpdate(
-        {_id},
-        {
-          district: req.body.district,
-          price: req.body.price,
-          numberOfRooms: req.body.numberOfRooms,
-          image: req.file ? req.file.filename : null,
-        },
-      );
+      const updateValues = req.body as HouseEdit;
 
-      if (!house) {
-        return res.status(404).send({message: 'House not found'});
+      const updatedObj: HouseEdit = {};
+
+      const keys = Object.keys(updateValues) as unknown as Array<keyof HouseEdit>;
+
+      keys.forEach((key) => {
+        updatedObj[key] = updateValues[key];
+      });
+
+      if (file) {
+        updatedObj.image = file;
       }
 
-      res.send({message: 'House filed updated'});
-    } catch (e) {
-      res.status(500).send({error: 'Internal Server Error'});
+
+      if (houseUser === userId) {
+        const house = await House.findOneAndUpdate({_id}, updatedObj);
+        if (!house) {
+          return res.status(404).send({message: 'House not found'});
+        }
+      }
+
+      return res.send({message: 'can\'t update'});
+    } catch (error) {
+      if (error instanceof Error.ValidationError) {
+        return res.status(422).send(error);
+      }
+      return next(error);
     }
   },
 );

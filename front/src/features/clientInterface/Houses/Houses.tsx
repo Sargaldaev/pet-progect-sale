@@ -29,73 +29,76 @@ const Houses = () => {
     <>
       <HouseSearchByCategory/>
       <Box>
-        <Box display={'flex'} flexWrap={'wrap'} sx={{gap: '10px'}}>
+        <Box display={'flex'} flexWrap={'wrap'} sx={{gap: '15px',marginTop:4}}>
           {fetchLoad ? (
             <CircularProgress/>
           ) : (
             houses.length === 0 ? 'По вашему запросу ничего не найдено' :
-            houses.map(house => ({
-              ...house,
-              district: districts.find(item => item._id === house.district)?.name,
-            })).map((item) => {
-              return item.isPublished || user?._id === item.user ? (
-                user?._id === item.user && !item.isPublished ? (
-                  <Box key={item._id} position={'relative'}>
-                    <Box sx={{position: 'absolute', top: 0, color: 'red'}}>Not published</Box>
-                    <Card sx={{width: 345}}>
-                      {item.image ? (
-                        <CardMedia
-                          sx={{height: 350}}
-                          image={`http://localhost:8000/${item.image}`}
-                        />
-                      ) : (
-                        <CardMedia sx={{height: 350}} image={'img'}/>
-                      )}
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          Район: {item.district}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button component={Link} to={`/house/${item._id}`} size="small">
-                          Подробнее
-                        </Button>
-                        <Button
-                          className="btn ms-1 btn-primary "
-                          disabled={deleteLoad === item._id}
-                          onClick={() => deleteHouseId(item._id)}
-                        >
-                          {deleteLoad === item._id ? <CircularProgress/> : 'Delete'}
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Box>
-                ) : (
-                  <Box key={item._id}>
-                    <Card sx={{width: 345}}>
-                      {item.image ? (
-                        <CardMedia
-                          sx={{height: 350}}
-                          image={`http://localhost:8000/${item.image}`}
-                        />
-                      ) : (
-                        <CardMedia sx={{height: 350}} image={'img'}/>
-                      )}
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          Район: {item.district}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button component={Link} to={`/house/${item._id}`} size="small">
-                          Подробнее
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Box>
-                )
-              ) : null;
-            })
+              houses.map(house => ({
+                ...house,
+                district: districts.find(item => item._id === house.district)?.name,
+              })).map((item) => {
+                return item.isPublished || user?._id === item.user ? (
+                  user?._id === item.user && !item.isPublished ? (
+                    <Box key={item._id} position={'relative'}>
+                      <Box sx={{position: 'absolute', top: 0, color: 'red'}}>На рассмотрении модератора</Box>
+                      <Card sx={{width: 345}}>
+                        {item.image ? (
+                          <CardMedia
+                            sx={{height: 350}}
+                            image={`http://localhost:8000/${item.image}`}
+                          />
+                        ) : (
+                          <CardMedia sx={{height: 350}} image={'img'}/>
+                        )}
+                        <CardContent>
+                          <Typography
+                          >
+                            Район: {item.district}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button component={Link} to={`/house/${item._id}`} size="small">
+                            Подробнее
+                          </Button>
+                          <Button
+                            sx={{
+                              color: 'red'
+                            }}
+                            disabled={deleteLoad === item._id}
+                            onClick={() => deleteHouseId(item._id)}
+                          >
+                            {deleteLoad === item._id ? <CircularProgress/> : 'Удалить'}
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Box>
+                  ) : (
+                    <Box key={item._id}>
+                      <Card sx={{width: 345}}>
+                        {item.image ? (
+                          <CardMedia
+                            sx={{height: 350}}
+                            image={`http://localhost:8000/${item.image}`}
+                          />
+                        ) : (
+                          <CardMedia sx={{height: 350}} image={'img'}/>
+                        )}
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="div">
+                            Район: {item.district}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button component={Link} to={`/house/${item._id}`} size="small">
+                            Подробнее
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Box>
+                  )
+                ) : null;
+              })
           )}
         </Box>
       </Box>

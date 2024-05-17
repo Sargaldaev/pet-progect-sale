@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Grid, TextField, } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { Box, Button, Container, Grid, MenuItem, TextField, } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useDispatch, useSelector } from 'react-redux';
 import { HouseCreate } from '../../../types';
 import InputFile from '../../../components/InputFile/InputFile.tsx';
-import { createHouse } from '../../../store/House/housesThunk.ts';
+import { createHouse, fetchDistricts } from '../../../store/House/housesThunk.ts';
 import { AppDispatch, RootState } from '../../../app/store.ts';
 
 const darkTheme = createTheme({
@@ -17,7 +17,8 @@ const darkTheme = createTheme({
 const HousesForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {user} = useSelector((state: RootState) => state.user);
-  const {createLoad} = useSelector((state: RootState) => state.houses);
+  const {createLoad, districts} = useSelector((state: RootState) => state.houses);
+
 
   const navigate = useNavigate();
   const [state, setState] = useState<HouseCreate>({
@@ -25,16 +26,20 @@ const HousesForm = () => {
     price: '',
     numberOfRooms: '',
     description: '',
-    image:  null,
+    image: null,
   });
 
   useEffect(() => {
     if (!user) {
       navigate('/login');
     }
+    dispatch(fetchDistricts());
   }, [navigate]);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+    const {name, value, files} = e.target;
+    if (name === 'price' && isNaN(Number(value))) return;
+    if (name === 'numberOfRooms' && isNaN(Number(value))) return;
+
     setState((prevState) => ({
       ...prevState,
       [name]: files ? files[0] : value,
@@ -56,7 +61,10 @@ const HousesForm = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline/>
+        <Button component={Link} to={`/houses`} size="small">
+          Назад
+        </Button>
         <Box
           sx={{
             marginTop: 8,
@@ -66,18 +74,26 @@ const HousesForm = () => {
           }}
         >
 
-          <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
+
+          <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  label="Район"
-                  name="district"
-                  autoComplete="new-area"
-                  value={state.district}
-                  onChange={onChange}
-                  fullWidth={true}
+                  select
                   required
-                />
+                  name="district"
+                  label="Район"
+                  value={state.district}
+                  onChange={(e) => setState(prevState => ({...prevState, district: e.target.value}))}
+                  fullWidth
+                >
+                  <MenuItem value="" disabled>
+                    Выберите район
+                  </MenuItem>
+                  {districts.map(district => (
+                    <MenuItem key={district._id} value={district._id}>{district.name}</MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -87,7 +103,7 @@ const HousesForm = () => {
                   autoComplete="new-description"
                   value={state.description}
                   onChange={onChange}
-                  fullWidth={true}
+                  fullWidth
                   required
                 />
               </Grid>
@@ -106,7 +122,7 @@ const HousesForm = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <InputFile name={'image'} image={state.image} onChange={onChange} />
+                <InputFile name={'image'} image={state.image} onChange={onChange}/>
               </Grid>
 
               <Grid item xs={12}>
@@ -127,7 +143,7 @@ const HousesForm = () => {
               fullWidth
               color={'success'}
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{mt: 3, mb: 2}}
               disabled={!!createLoad}
             >
               Добавить

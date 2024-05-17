@@ -6,7 +6,7 @@ import {
   fetchData,
   fetchDistricts,
   getFullInfo,
-  houseSearchByCategory,
+  houseSearchByCategory, publishedHouse,
 } from './housesThunk.ts';
 
 export interface HouseState {
@@ -20,6 +20,8 @@ export interface HouseState {
   editLoad: boolean;
   searchLoad: boolean;
   deleteLoad: string;
+  publishedHouseLoad: string;
+
 }
 
 const initialState: HouseState = {
@@ -32,7 +34,8 @@ const initialState: HouseState = {
   searchLoad:false,
   createLoad: false,
   editLoad: false,
-  deleteLoad: ''
+  deleteLoad: '',
+  publishedHouseLoad:'',
 };
 
 export const houseSlice = createSlice({
@@ -108,6 +111,16 @@ export const houseSlice = createSlice({
     });
     builder.addCase(deleteHouse.rejected, (state: HouseState) => {
       state.deleteLoad = '';
+    });
+
+    builder.addCase(publishedHouse.pending, (state: HouseState, action) => {
+      state.publishedHouseLoad = action.meta.arg || '';
+    });
+    builder.addCase(publishedHouse.fulfilled, (state: HouseState) => {
+      state.publishedHouseLoad = '';
+    });
+    builder.addCase(publishedHouse.rejected, (state: HouseState) => {
+      state.publishedHouseLoad = '';
     });
 
   },

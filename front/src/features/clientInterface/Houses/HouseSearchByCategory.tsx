@@ -27,6 +27,10 @@ const HouseSearchByCategory = () => {
     event.preventDefault();
 
     try {
+      if (!state.district && !state.numberOfRooms && !state.priceTo && !state.priceFrom) {
+        alert('Выберите какой либо параметр');
+        return;
+      }
       await dispatch(houseSearchByCategory(state));
 
       setState({
@@ -80,7 +84,7 @@ const HouseSearchByCategory = () => {
           />
         </Grid>
 
-        <Box display={'flex'}>
+        <Box display={'flex'} sx={{marginTop: 1, marginLeft: '15px'}}>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -92,7 +96,7 @@ const HouseSearchByCategory = () => {
               onChange={inputChangeHandler}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} sx={{marginLeft:1}}>
             <TextField
               fullWidth
               name="priceTo"
@@ -106,6 +110,13 @@ const HouseSearchByCategory = () => {
         </Box>
         <Button
           type={'submit'}
+          sx={{
+            margin: 2,
+            border: '1px solid grey',
+            color: 'green',
+            width: 150,
+            paddingY: 1
+          }}
         >
           Поиск
         </Button>

@@ -46,7 +46,7 @@ export const createHouse = createAsyncThunk<void, HouseCreate>( //Todo форм�
   'house/createHouse',
   async (house) => {
     const formData = new FormData();
-    formData.append('area', house.district);
+    formData.append('district', house.district);
     formData.append('numberOfRooms', house.numberOfRooms);
     formData.append('price', house.price);
     formData.append('description', house.description);
@@ -107,12 +107,16 @@ export const houseSearchByCategory = createAsyncThunk<HouseResponse, SearchByCat
 
 export const deleteHouse = createAsyncThunk<void, string>(
   'house/deleteHouse',
-  async (id) => {
+  async (_id) => {
     try {
-      return await axiosApi.delete(`houses/${id}`);
+      return await axiosApi.delete(`houses/${_id}`);
     } catch (e) {
       console.log(e);
       throw e;
     }
   },
 );
+
+export const publishedHouse = createAsyncThunk<void, string>('house/published', async (_id) => {
+  await axiosApi.patch(`/houses/${_id}/togglePublished`);
+});

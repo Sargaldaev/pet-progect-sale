@@ -4,12 +4,13 @@ import { User } from '../../types';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../app/store.ts';
 import { logout } from '../../store/user/userThunk';
+import { Link } from 'react-router-dom';
 
 interface Props {
   user: User;
 }
 
-const UserMenu: React.FC<Props> = ({ user }) => {
+const UserMenu: React.FC<Props> = ({user}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -31,6 +32,11 @@ const UserMenu: React.FC<Props> = ({ user }) => {
       </Button>
       <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem>
+          <Link to="/addHouse" style={{color: 'white', textDecoration: 'none'}}>
+            Добавить объявление
+          </Link>
+        </MenuItem>
       </Menu>
 
     </>
